@@ -10,13 +10,9 @@ jobs:
   # ── Build validation ──────────────────────────────────────────────────────
   build:
     name: Build check
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
 
       - name: Backend — install & compile TypeScript
         working-directory: backend
@@ -35,39 +31,27 @@ jobs:
     name: Deploy phukienquathoinuoc
     needs: build
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: SSH deploy
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          script: |
-            cd /root/dienlanhecomerce
-            git pull
-            docker compose build --no-cache
-            docker compose up -d
-            docker image prune -f
+      - name: Pull & restart
+        run: |
+          cd /root/dienlanhecomerce
+          git pull
+          docker compose build
+          docker compose up -d
+          docker image prune -f
 
   # ── Deploy: binhminhsmartwatch.com ───────────────────────────────────────
   deploy-binhminh:
     name: Deploy binhminhsmartwatch
     needs: build
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: SSH deploy
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          script: |
-            cd /root/binhminhsmartwatch
-            git pull
-            docker compose build --no-cache
-            docker compose up -d
-            docker image prune -f
+      - name: Pull & restart
+        run: |
+          cd /root/binhminhsmartwatch
+          git pull
+          docker compose build
+          docker compose up -d
+          docker image prune -f
