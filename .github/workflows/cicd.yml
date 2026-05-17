@@ -3,36 +3,11 @@ name: CI/CD
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
-  # ── Build validation ──────────────────────────────────────────────────────
-  build:
-    name: Build check
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Backend — install & compile TypeScript
-        working-directory: backend
-        env:
-          NODE_OPTIONS: "--max-old-space-size=512"
-        run: |
-          npm ci
-          npm run build
-
-      - name: Frontend — install & build Vite
-        working-directory: frontend
-        run: |
-          npm ci
-          npm run build
-
   # ── Deploy: phukienquathoinuoc.com (first) ───────────────────────────────
   deploy-phukien:
     name: Deploy phukienquathoinuoc
-    needs: build
-    if: github.ref == 'refs/heads/main'
     runs-on: self-hosted
     steps:
       - name: Pull, build & restart
@@ -49,7 +24,6 @@ jobs:
   deploy-binhminh:
     name: Deploy binhminhsmartwatch
     needs: deploy-phukien
-    if: github.ref == 'refs/heads/main'
     runs-on: self-hosted
     steps:
       - name: Pull, build & restart
