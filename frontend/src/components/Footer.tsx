@@ -31,7 +31,7 @@ export function Footer({ onNavigate }: FooterProps) {
             <div className="flex items-center gap-2 mb-6">
               <div className="bg-white shadow-sm text-white p-2 rounded-lg">
                 <img 
-                  src={getSafeImageUrl('', 'https://res.cloudinary.com/dhiczfj7e/image/upload/v1774328232/LOGO-QHN_h3xglw.png')} 
+                  src={getSafeImageUrl(companyInfo?.logoUrl || '', 'https://res.cloudinary.com/dhiczfj7e/image/upload/v1774328232/LOGO-QHN_h3xglw.png')}
                   alt={companyInfo?.companyName || "Logo"} 
                   className="w-6 h-6 object-contain"
                 />
