@@ -16,6 +16,8 @@ jobs:
 
       - name: Backend — install & compile TypeScript
         working-directory: backend
+        env:
+          NODE_OPTIONS: "--max-old-space-size=512"
         run: |
           npm ci
           npm run build
