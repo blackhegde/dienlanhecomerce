@@ -26,32 +26,36 @@ jobs:
           npm ci
           npm run build
 
-  # ── Deploy: phukienquathoinuoc.com ───────────────────────────────────────
+  # ── Deploy: phukienquathoinuoc.com (first) ───────────────────────────────
   deploy-phukien:
     name: Deploy phukienquathoinuoc
     needs: build
     if: github.ref == 'refs/heads/main'
     runs-on: self-hosted
     steps:
-      - name: Pull & restart
+      - name: Pull, build & restart
         run: |
           cd /root/dienlanhecomerce
           git pull
           docker compose build
           docker compose up -d
-          docker image prune -f
 
-  # ── Deploy: binhminhsmartwatch.com ───────────────────────────────────────
+      - name: Clean old Docker images
+        run: docker image prune -af
+
+  # ── Deploy: binhminhsmartwatch.com (after phukien finishes) ──────────────
   deploy-binhminh:
     name: Deploy binhminhsmartwatch
-    needs: build
+    needs: deploy-phukien
     if: github.ref == 'refs/heads/main'
     runs-on: self-hosted
     steps:
-      - name: Pull & restart
+      - name: Pull, build & restart
         run: |
           cd /root/binhminhsmartwatch
           git pull
           docker compose build
           docker compose up -d
-          docker image prune -f
+
+      - name: Clean old Docker images
+        run: docker image prune -af
