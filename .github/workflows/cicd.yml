@@ -11,10 +11,14 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Write backend env
-        run: |
-          cat > /root/dienlanhecomerce/backend/.env.production << 'ENVEOF'
-          ${{ secrets.PHUKIEN_ENV }}
-          ENVEOF
+        run: printf '%s' "$PHUKIEN_ENV" > /root/dienlanhecomerce/backend/.env.production
+        env:
+          PHUKIEN_ENV: ${{ secrets.PHUKIEN_ENV }}
+
+      - name: Write GA4 service account
+        run: printf '%s' "$GA4_JSON" > /root/dienlanhecomerce/backend/google-service-account.json
+        env:
+          GA4_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
 
       - name: Pull, build & restart
         run: |
@@ -33,10 +37,14 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Write backend env
-        run: |
-          cat > /root/binhminhsmartwatch/backend/.env.production << 'ENVEOF'
-          ${{ secrets.BINHMINH_ENV }}
-          ENVEOF
+        run: printf '%s' "$BINHMINH_ENV" > /root/binhminhsmartwatch/backend/.env.production
+        env:
+          BINHMINH_ENV: ${{ secrets.BINHMINH_ENV }}
+
+      - name: Write GA4 service account
+        run: printf '%s' "$GA4_JSON" > /root/binhminhsmartwatch/backend/google-service-account.json
+        env:
+          GA4_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
 
       - name: Pull, build & restart
         run: |

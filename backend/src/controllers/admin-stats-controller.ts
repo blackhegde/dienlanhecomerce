@@ -89,25 +89,31 @@ export const getTimeseries = async (req: Request, res: Response): Promise<void> 
  */
 export const getGa4Stats = async (req: Request, res: Response): Promise<void> => {
   // Graceful fallback when GA4 is not configured
-  if (!process.env.GA4_PROPERTY_ID || !process.env.GA4_SERVICE_ACCOUNT_PATH) {
+  const hasJson = !!process.env.GA4_SERVICE_ACCOUNT_JSON;
+  const hasFile = !!process.env.GA4_SERVICE_ACCOUNT_PATH;
+  if (!process.env.GA4_PROPERTY_ID || (!hasJson && !hasFile)) {
     res.json({ success: true, ga4: { available: false } });
     return;
   }
 
-  // Read service account email for debug purposes (client_email is not sensitive)
+  // Parse credentials — prefer JSON env var, fall back to file path
+  let credentials: object | undefined;
   let serviceAccountEmail: string | undefined;
   try {
-    const raw = fs.readFileSync(process.env.GA4_SERVICE_ACCOUNT_PATH!, 'utf8');
-    serviceAccountEmail = JSON.parse(raw).client_email;
+    const raw = hasJson
+      ? process.env.GA4_SERVICE_ACCOUNT_JSON!
+      : fs.readFileSync(process.env.GA4_SERVICE_ACCOUNT_PATH!, 'utf8');
+    const parsed = JSON.parse(raw);
+    credentials = parsed;
+    serviceAccountEmail = parsed.client_email;
   } catch {
-    res.json({ success: true, ga4: { available: false, error: `Cannot read service account file: ${process.env.GA4_SERVICE_ACCOUNT_PATH}` } });
+    res.json({ success: true, ga4: { available: false, error: 'Cannot parse GA4 service account credentials' } });
     return;
   }
 
   try {
-    // Load credentials from JSON file (path from env var, ignored by git)
     const auth = new google.auth.GoogleAuth({
-      keyFile: process.env.GA4_SERVICE_ACCOUNT_PATH,
+      ...(hasJson ? { credentials } : { keyFile: process.env.GA4_SERVICE_ACCOUNT_PATH }),
       scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
     });
     const analyticsData = google.analyticsdata({ version: 'v1beta', auth });
