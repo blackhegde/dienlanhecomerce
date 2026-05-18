@@ -10,6 +10,7 @@ export interface ICompanyInfo extends Document {
   facebookLink: string;
   qrCodeUrl: string;
   logoUrl: string;
+  headerTagline: string;
   faviconUrl: string;
   siteTitle: string;
   siteDescription: string;
@@ -61,6 +62,10 @@ const companyInfoSchema = new Schema<ICompanyInfo>(
       default: '',
     },
     logoUrl: {
+      type: String,
+      default: '',
+    },
+    headerTagline: {
       type: String,
       default: '',
     },

@@ -28,3 +28,4 @@ networks:
     name: ${INTERNAL_NETWORK_NAME:-phukien_internal}
   db_net:
     external: true
+
