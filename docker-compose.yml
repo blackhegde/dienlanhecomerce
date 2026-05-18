@@ -7,10 +7,9 @@ services:
       - ./backend/.env.production
     environment:
       - PORT=5000
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     networks:
       - internal
+      - db_net
 
   frontend:
     build: ./frontend
@@ -27,3 +26,5 @@ networks:
     external: true
   internal:
     name: ${INTERNAL_NETWORK_NAME:-phukien_internal}
+  db_net:
+    external: true
