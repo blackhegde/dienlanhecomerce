@@ -28,7 +28,7 @@ jobs:
         run: |
           cd /root/dienlanhecomerce
           git pull
-          docker compose build
+          docker compose build --no-cache
           docker compose up -d
 
       - name: Clean old Docker images
@@ -58,7 +58,7 @@ jobs:
         run: |
           cd /root/binhminhsmartwatch
           git pull
-          docker compose build
+          docker compose build --no-cache
           docker compose up -d
 
       - name: Clean old Docker images
