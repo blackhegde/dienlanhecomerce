@@ -11,9 +11,8 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Write compose env
-        run: printf '%s' "$COMPOSE_ENV" > /root/dienlanhecomerce/.env
-        env:
-          COMPOSE_ENV: ${{ secrets.PHUKIEN_COMPOSE_ENV }}
+        run: |
+          printf 'BACKEND_CONTAINER_NAME=phukien_backend\nFRONTEND_CONTAINER_NAME=phukien_frontend\nINTERNAL_NETWORK_NAME=phukien_internal\n' > /root/dienlanhecomerce/.env
 
       - name: Write backend env
         run: printf '%s' "$BACKEND_ENV" > /root/dienlanhecomerce/backend/.env.production
@@ -42,9 +41,8 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Write compose env
-        run: printf '%s' "$COMPOSE_ENV" > /root/binhminhsmartwatch/.env
-        env:
-          COMPOSE_ENV: ${{ secrets.BINHMINH_COMPOSE_ENV }}
+        run: |
+          printf 'BACKEND_CONTAINER_NAME=binhminh_backend\nFRONTEND_CONTAINER_NAME=binhminh_frontend\nINTERNAL_NETWORK_NAME=binhminh_internal\n' > /root/binhminhsmartwatch/.env
 
       - name: Write backend env
         run: printf '%s' "$BACKEND_ENV" > /root/binhminhsmartwatch/backend/.env.production
