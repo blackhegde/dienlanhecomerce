@@ -9,6 +9,8 @@ services:
       - ./backend/.env.production
     environment:
       - PORT=5000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - internal
 

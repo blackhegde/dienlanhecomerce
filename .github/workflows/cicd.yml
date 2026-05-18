@@ -10,6 +10,12 @@ jobs:
     name: Deploy phukienquathoinuoc
     runs-on: self-hosted
     steps:
+      - name: Write backend env
+        run: |
+          cat > /root/dienlanhecomerce/backend/.env.production << 'ENVEOF'
+          ${{ secrets.PHUKIEN_ENV }}
+          ENVEOF
+
       - name: Pull, build & restart
         run: |
           cd /root/dienlanhecomerce
@@ -26,6 +32,12 @@ jobs:
     needs: deploy-phukien
     runs-on: self-hosted
     steps:
+      - name: Write backend env
+        run: |
+          cat > /root/binhminhsmartwatch/backend/.env.production << 'ENVEOF'
+          ${{ secrets.BINHMINH_ENV }}
+          ENVEOF
+
       - name: Pull, build & restart
         run: |
           cd /root/binhminhsmartwatch
