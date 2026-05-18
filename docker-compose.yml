@@ -1,9 +1,7 @@
-version: "3.8"
-
 services:
   backend:
     build: ./backend
-    container_name: phukien_backend
+    container_name: ${BACKEND_CONTAINER_NAME:-phukien_backend}
     restart: always
     env_file:
       - ./backend/.env.production
@@ -16,7 +14,7 @@ services:
 
   frontend:
     build: ./frontend
-    container_name: phukien_frontend
+    container_name: ${FRONTEND_CONTAINER_NAME:-phukien_frontend}
     restart: always
     depends_on:
       - backend
@@ -28,4 +26,4 @@ networks:
   web:
     external: true
   internal:
-    name: phukien_internal
+    name: ${INTERNAL_NETWORK_NAME:-phukien_internal}

@@ -10,10 +10,15 @@ jobs:
     name: Deploy phukienquathoinuoc
     runs-on: self-hosted
     steps:
-      - name: Write backend env
-        run: printf '%s' "$PHUKIEN_ENV" > /root/dienlanhecomerce/backend/.env.production
+      - name: Write compose env
+        run: printf '%s' "$COMPOSE_ENV" > /root/dienlanhecomerce/.env
         env:
-          PHUKIEN_ENV: ${{ secrets.PHUKIEN_ENV }}
+          COMPOSE_ENV: ${{ secrets.PHUKIEN_COMPOSE_ENV }}
+
+      - name: Write backend env
+        run: printf '%s' "$BACKEND_ENV" > /root/dienlanhecomerce/backend/.env.production
+        env:
+          BACKEND_ENV: ${{ secrets.PHUKIEN_ENV }}
 
       - name: Write GA4 service account
         run: printf '%s' "$GA4_JSON" > /root/dienlanhecomerce/backend/google-service-account.json
@@ -36,10 +41,15 @@ jobs:
     needs: deploy-phukien
     runs-on: self-hosted
     steps:
-      - name: Write backend env
-        run: printf '%s' "$BINHMINH_ENV" > /root/binhminhsmartwatch/backend/.env.production
+      - name: Write compose env
+        run: printf '%s' "$COMPOSE_ENV" > /root/binhminhsmartwatch/.env
         env:
-          BINHMINH_ENV: ${{ secrets.BINHMINH_ENV }}
+          COMPOSE_ENV: ${{ secrets.BINHMINH_COMPOSE_ENV }}
+
+      - name: Write backend env
+        run: printf '%s' "$BACKEND_ENV" > /root/binhminhsmartwatch/backend/.env.production
+        env:
+          BACKEND_ENV: ${{ secrets.BINHMINH_ENV }}
 
       - name: Write GA4 service account
         run: printf '%s' "$GA4_JSON" > /root/binhminhsmartwatch/backend/google-service-account.json
